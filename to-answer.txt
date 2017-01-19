@@ -1,0 +1,2 @@
+Czy dodajamy jakąś biblioteczką z componentami UIowymi
+Co z reduxem? Jakis globalny storage będzie na pewno przydatny

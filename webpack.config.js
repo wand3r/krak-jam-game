@@ -1,0 +1,38 @@
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+  entry: {app: [path.resolve(__dirname, "src", "index.js")]},
+  output: {
+    filename: "[name].js",
+    path: path.resolve(__dirname, "build"),
+    publicPath: ""
+  },
+  resolve: {
+    modules: ["node_modules"],
+    extensions: [".js", ".jsx"],
+    alias: {utils: path.resolve(__dirname, "src", "utils", "index.js")}
+  },
+  devtool: "eval-source-map",
+  devServer: {
+    contentBase: [path.resolve(__dirname, "public")],
+    inline: true,
+    host: "localhost",
+    port: 3000
+  },
+  module: {
+    rules: [
+      {
+        test: [/\.jsx?$/],
+        include: [path.resolve(__dirname, "src")],
+        use: [{loader: "babel-loader"}]
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: path.resolve(__dirname, "src", "index.html")
+    })
+  ]
+};

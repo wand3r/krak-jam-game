@@ -1,0 +1,38 @@
+{
+  "name": "krakjam",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "BABEL_ENV=development NODE_ENV=development webpack --config ./webpack.config.js",
+    "watch": "BABEL_ENV=development NODE_ENV=development webpack --config ./webpack.config.js --progress --watch",
+    "dev-server": "BABEL_ENV=development NODE_ENV=development webpack-dev-server --config ./webpack.config.js",
+    "test": "jest --config jest.config.json --watch",
+    "storybook": "start-storybook -s ./public -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@kadira/storybook": "^2.21.0",
+    "@kadira/storybook-addon-knobs": "^1.7.1",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-jest": "^18.0.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2016": "^6.16.0",
+    "babel-preset-es2017": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "html-webpack-plugin": "^2.24.1",
+    "jest": "^18.0.0",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "webpack": "^2.2.0",
+    "webpack-dev-server": "^2.2.0"
+  },
+  "dependencies": {
+    "glamor": "^2.20.18"
+  }
+}
