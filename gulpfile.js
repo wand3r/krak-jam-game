@@ -25,7 +25,7 @@ gulp.task('server', function () {
 });
 
 gulp.task('build', function(cb){
-    exec('node ./node_modules/.bin/babel src/server --out-dir build/server --ignore test.js', function (err) {
+    exec('node ./node_modules/.bin/babel src --out-dir build --ignore src/client', function (err) {
         cb(err);
     });
 });
