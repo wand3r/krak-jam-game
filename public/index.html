@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script>
+    var socket = io.connect('http://localhost:8080');
+    socket.on('connect', function () {
+        console.log('connect');
+        socket.on('action-result', function (result) {
+            console.log(result);
+        });
+        socket.emit('action', {
+            $type: 'sample-small'
+        });
+    });
+</script>
+</body>
+</html>
