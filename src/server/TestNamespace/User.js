@@ -7,3 +7,5 @@ export class User {
         this.age = Math.floor(Math.random() * 55);
     }
 }
+
+export const foo = 'awdadw';

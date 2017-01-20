@@ -6,6 +6,7 @@
   "scripts": {
     "build": "BABEL_ENV=development NODE_ENV=development webpack --config ./webpack.config.js",
     "watch": "BABEL_ENV=development NODE_ENV=development webpack --config ./webpack.config.js --progress --watch",
+    "watch-server": "gulp",
     "dev-server": "BABEL_ENV=development NODE_ENV=development webpack-dev-server --config ./webpack.config.js",
     "test": "jest --config jest.config.json --watch",
     "storybook": "start-storybook -s ./public -p 6006",
@@ -25,10 +26,12 @@
     "babel-preset-es2017": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-2": "^6.18.0",
+    "gulp": "^3.9.1",
     "html-webpack-plugin": "^2.24.1",
     "jest": "^18.0.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
+    "run-sequence": "^1.2.2",
     "webpack": "^2.2.0",
     "webpack-dev-server": "^2.2.0"
   },
