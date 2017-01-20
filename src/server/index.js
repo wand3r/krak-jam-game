@@ -13,7 +13,7 @@ import express from "express";
 var app = express();
 
 app.get("/", function(req, res) {
-  res.send("Hello Worlasd asdfasd!");
+  res.send("Hello Worla asdfas!");
 });
 
 app.listen(3000, function() {
