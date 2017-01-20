@@ -1,19 +1,20 @@
-import {User, foo} from "./TestNamespace/User";
-
-const _constantUser = new User();
-let _letUser = new User();
-
-const _mapWithArrow = [_constantUser, _letUser].map(
-  (user, id) => ({id, ...user})
-);
-
 import express from "express";
-var app = express();
+import {createServer} from 'http';
+import Server from 'socket.io';
+import {join} from 'path';
 
-app.get("/", function(req, res) {
-  res.send(`${foo} + Hello--- + ${foo}`);
+const _app = new express();
+
+const _server = createServer(_app);
+const _io = Server(_server);
+
+_io.on('connection', (sock) => {
+    console.log('client connected');
 });
 
-app.listen(3000, function() {
-  console.log("Server listening....");
+_app.get("/", function(req, res) {
+    res.sendFile(join(__dirname, '/../../public/index.html'));
 });
+
+_app.server = _server;
+_app.server.listen(8080);
