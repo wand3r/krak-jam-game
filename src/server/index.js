@@ -2,7 +2,7 @@ import express from "express";
 import {createServer} from 'http';
 import Server from 'socket.io';
 import {join} from 'path';
-import {combineHandlers} from "../architecture/combineHandlers";
+import {combineHandlers} from "../lefrex-js";
 
 import {handlers} from "../domain/action-handlers";
 
@@ -16,7 +16,7 @@ console.log(_handlers);
 
 _io.on('connection', (sock) => {
     sock.on('action', (action) => {
-        sock.emit('action-result', {['$type']: action.$type, ..._handlers[action.$type](action)});
+        sock.emit('action-result', {['$type']: action.$type, ['$id']: action.$id, ['$result']:_handlers[action.$type](action)});
     });
 });
 

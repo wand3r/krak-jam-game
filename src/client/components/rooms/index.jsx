@@ -1,15 +1,24 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import FlipMove from 'react-flip-move'
-import { css } from 'glamor'
+import {css} from 'glamor'
+import {processAction} from "../../../lefrex-js/action-processor";
+import rooms from "../../../shared/actions/rooms";
+import {ModalContainer, ModalDialog} from 'react-modal-dialog'
 
-const rooms = [
-  { id: "1", name: "Room 1", desc: "Cześć", teams: { red: 1, blue: 2 }},
-  { id: "2", name: "Room 1", desc: "Cześć", teams: { red: 1, blue: 2 }},
-  { id: "3", name: "Room 1", desc: "Cześć", teams: { red: 1, blue: 2 }},
-  { id: "4", name: "Room 2", desc: "Nie wchodzić", teams: { red: 4, blue: 2 }},
-  { id: "5", name: "Room 3", desc: "Elo, luz jak w hip-hopie", teams: { red: 3, blue: 8 }},
-  { id: "6", name: "Room 3", desc: "Elo, luz jak w hip-hopie", teams: { red: 3, blue: 8 }},
-]
+const _rooms = [
+    {id: "1", name: "Room 1", desc: "Cześć", teams: {red: 1, blue: 2}},
+    {id: "2", name: "Room 1", desc: "Cześć", teams: {red: 1, blue: 2}},
+    {id: "3", name: "Room 1", desc: "Cześć", teams: {red: 1, blue: 2}},
+    {id: "4", name: "Room 2", desc: "Nie wchodzić", teams: {red: 4, blue: 2}},
+    {id: "5", name: "Room 3", desc: "Elo, luz jak w hip-hopie", teams: {red: 3, blue: 8}},
+    {id: "6", name: "Room 3", desc: "Elo, luz jak w hip-hopie", teams: {red: 3, blue: 8}},
+];
+
+setTimeout(() => {
+    processAction({$type: rooms.get}).then(result => {
+        console.log(result);
+    });
+}, 5000);
 
 const SingleRoom = ({id, name, desc, admin, teams, join}) => {
   return (
@@ -31,16 +40,17 @@ const SingleRoom = ({id, name, desc, admin, teams, join}) => {
 }
 
 export class Rooms extends Component {
-  componentDidMount() {
+    componentDidMount() {
 
   }
   state = {
-    rooms,
+    rooms: _rooms,
     roomNameSearch: "",
+    creatingRoom: false,
   }
   render() {
     const { joinRoom } = this.props
-    const { rooms, roomNameSearch } = this.state
+    const { rooms, roomNameSearch, creatingRoom } = this.state
     const filterdRooms = rooms.filter(({name}) => name.includes(roomNameSearch))
     return (
       <div {...css({
@@ -54,17 +64,27 @@ export class Rooms extends Component {
         })}>
           <input 
             {...css({height: "100%", flex: "1", fontSize: "1.5em", padding: "0 1%"})}
-            placeholder="Room name" 
+            placeholder="Search room name" 
             onChange={({target: {value}}) => this.setState({roomNameSearch: value}) } 
           />
           <button
             {...css({
               width: "50px", height: "100%", 
               fontSize: "1em", padding: "0 1%"
-            })} 
+            })}
+            onClick={() => this.setState(s => this.setState({creatingRoom: true}))} 
           >
             +
           </button>
+          {
+            creatingRoom &&
+            <ModalContainer onClose={() => this.setState({creatingRoom: false})}>
+                <ModalDialog onClose={() => this.setState({creatingRoom: false})}>
+                    <h1>Dialog Content</h1>
+                    <p>More Content. Anything goes here</p>
+                </ModalDialog>
+            </ModalContainer>
+          }
         </div>
         <div {...css({flex: "1"})}>
           <FlipMove>
