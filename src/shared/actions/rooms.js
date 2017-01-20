@@ -1,3 +1,3 @@
-export default {
+export const rooms = {
     get: 'rooms-get'
-}
+};

@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import FlipMove from 'react-flip-move'
 import {css} from 'glamor'
 import {processAction} from "../../../lefrex-js/action-processor";
-import rooms from "../../../shared/actions/rooms";
+import {rooms} from "../../../shared/actions/rooms";
 
-const _rooms = [
+let _rooms = [
     {id: "1", name: "Room 1", desc: "Cześć", teams: {red: 1, blue: 2}},
     {id: "2", name: "Room 1", desc: "Cześć", teams: {red: 1, blue: 2}},
     {id: "3", name: "Room 1", desc: "Cześć", teams: {red: 1, blue: 2}},
@@ -16,6 +16,7 @@ const _rooms = [
 setTimeout(() => {
     processAction({$type: rooms.get}).then(result => {
         console.log(result);
+        _rooms = result;
     });
 }, 5000);
 
@@ -40,7 +41,7 @@ const SingleRoom = ({id, name, desc, admin, teams, join}) => {
             </button>
         </div>
     )
-}
+};
 
 export class Rooms extends Component {
     componentDidMount() {
@@ -50,12 +51,12 @@ export class Rooms extends Component {
     state = {
         rooms,
         roomNameSearch: "",
-    }
+    };
 
     render() {
-        const {joinRoom} = this.props
-        const {rooms, roomNameSearch} = this.state
-        const filterdRooms = _rooms.filter(({name}) => name.includes(roomNameSearch))
+        const {joinRoom} = this.props;
+        const {rooms, roomNameSearch} = this.state;
+        const filteredRooms = _rooms.filter(({name}) => name.includes(roomNameSearch));
         return (
             <div {...css({
                 display: "flex", flexDirection: "column",
@@ -71,7 +72,7 @@ export class Rooms extends Component {
                 </div>
                 <div {...css({flex: "1"})}>
                     <FlipMove>
-                        {filterdRooms.map((room, index) => (
+                        {filteredRooms.map((room, index) => (
                             <div key={room.id}>
                                 <SingleRoom
                                     {...room}
@@ -88,12 +89,6 @@ export class Rooms extends Component {
                     >
                         Create Room
                     </button>
-                    <Modal
-                        isOpen={true}
-                        contentLabel="Modal"
-                    >
-                        <input placeholder="Room name"/>
-                    </Modal>
                 </div>
             </div>
         )
