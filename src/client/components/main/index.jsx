@@ -18,10 +18,11 @@ const steps = {
 
 export class Main extends Component {
   state = {
-    step: "rooms"
+    step: "rooms",
+    roomId: undefined,
   }
   render() {
-    const { step } = this.state
+    const { step, roomId } = this.state
     return (
       <div>
         <div>
@@ -30,7 +31,10 @@ export class Main extends Component {
           <button onClick={() => this.setState({step: "questions"})}>Questions</button>
         </div>
         <div>
-          {steps[step].component}
+          {step === "rooms" ? <Rooms openRoom={roomId => this.setState({step: "room", roomId})} /> :
+           step === "room" ? <Room roomId={roomId} /> :
+           step === "questions" ? <Questions /> :
+           undefined}/>
         </div>
       </div>
     )
