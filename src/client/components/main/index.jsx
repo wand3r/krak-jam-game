@@ -26,11 +26,6 @@ export class Main extends Component {
     return (
       <div>
         <div>
-          <button onClick={() => this.setState({step: "rooms"})}>Rooms</button>
-          <button onClick={() => this.setState({step: "room"})}>Room</button>
-          <button onClick={() => this.setState({step: "questions"})}>Questions</button>
-        </div>
-        <div>
           {step === "rooms" ? <Rooms openRoom={roomId => this.setState({step: "room", roomId})} /> :
            step === "room" ? <Room roomId={roomId} /> :
            step === "questions" ? <Questions /> :
