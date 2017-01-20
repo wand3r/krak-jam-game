@@ -16,7 +16,7 @@ console.log(_handlers);
 
 _io.on('connection', (sock) => {
     sock.on('action', (action) => {
-        sock.emit('action-result', {['$type']: action.$type, ['$id']: action.$id, ..._handlers[action.$type](action)});
+        sock.emit('action-result', {['$type']: action.$type, ['$id']: action.$id, ['$result']:_handlers[action.$type](action)});
     });
 });
 

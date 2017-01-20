@@ -5,7 +5,7 @@ const _connection = getConnection();
 const _awaitedActions = {};
 
 _connection.on('action-result', (result) => {
-    _awaitedActions[result.$id](result);
+    _awaitedActions[result.$id](result.$result);
     delete _awaitedActions[result.$id];
 });
 
