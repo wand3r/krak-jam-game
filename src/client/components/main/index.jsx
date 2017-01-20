@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-
+import React, { Component } from "react"
+import { css } from 'glamor'
 import { Rooms } from '../rooms'
 import { Room } from '..//room'
 import { Questions } from '../questions'
@@ -24,13 +24,11 @@ export class Main extends Component {
   render() {
     const { step, roomId } = this.state
     return (
-      <div>
-        <div>
-          {step === "rooms" ? <Rooms openRoom={roomId => this.setState({step: "room", roomId})} /> :
-           step === "room" ? <Room roomId={roomId} /> :
-           step === "questions" ? <Questions /> :
-           undefined}
-        </div>
+      <div {...css({height: "100%", display: "flex"})}>
+        {step === "rooms" ? <Rooms openRoom={roomId => this.setState({step: "room", roomId})} /> :
+          step === "room" ? <Room roomId={roomId} /> :
+          step === "questions" ? <Questions /> :
+          undefined}
       </div>
     )
   }
