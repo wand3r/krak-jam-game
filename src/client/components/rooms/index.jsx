@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import FlipMove from 'react-flip-move'
 import { css } from 'glamor'
-import Modal from 'react-model'
 
 const rooms = [
   { id: "1", name: "Room 1", desc: "Cześć", teams: { red: 1, blue: 2 }},
@@ -20,15 +19,11 @@ const SingleRoom = ({id, name, desc, admin, teams, join}) => {
     >
       <div {...css({flex: 1})}>
         <div>{name}</div>
-        <div>{admin}</div>
-      </div>
-      <div {...css({flex: 2})}>
-        {desc}
       </div>
       <div {...css({flex: 1})}>
         {teams.red} vs {teams.blue}
       </div>
-      <button {...css({width: 100})} onClick={() => join(id)}>
+      <button {...css({width: 100, height: '100%'})} onClick={() => join(id)}>
         Join
       </button> 
     </div>
@@ -53,12 +48,23 @@ export class Rooms extends Component {
         flex: 1, 
         height: "100%", 
       })}>
-        <div {...css({display: "flex", justifyContent: "space-around", height: "40px"})}>
-            <input 
-              {...css({height: "100%", flex: "0.9", fontSize: "1.5em", padding: "0 1%"})}
-              placeholder="Room name" 
-              onChange={({target: {value}}) => this.setState({roomNameSearch: value}) } 
-            />
+        <div {...css({
+          display: "flex", justifyContent: "space-around", 
+          height: "40px"
+        })}>
+          <input 
+            {...css({height: "100%", flex: "1", fontSize: "1.5em", padding: "0 1%"})}
+            placeholder="Room name" 
+            onChange={({target: {value}}) => this.setState({roomNameSearch: value}) } 
+          />
+          <button
+            {...css({
+              width: "50px", height: "100%", 
+              fontSize: "1em", padding: "0 1%"
+            })} 
+          >
+            +
+          </button>
         </div>
         <div {...css({flex: "1"})}>
           <FlipMove>
@@ -73,18 +79,7 @@ export class Rooms extends Component {
           </FlipMove>
         </div>
         <div {...css({display: "flex", justifyContent: "space-around", height: "40px"})}>
-          <button
-            {...css({height: "100%", flex: "0.9", fontSize: "1em", padding: "0 1%"})} 
-            {...css({width: 150, height: "100%"})}
-          >
-            Create Room
-          </button>          
-          <Modal  
-            isOpen={true} 
-            contentLabel="Modal"
-          >
-            <input placeholder="Room name" />
-          </Modal>
+          
         </div>
       </div>
     )
