@@ -7,6 +7,6 @@ storiesOf("SampleComponent", module)
   .add(
     "Rooms",
     () => (
-      <Rooms openRoom={id => action(`open room ${id}`)}/>
+      <Rooms openRoom={action(`open room`)}/>
     )
   )

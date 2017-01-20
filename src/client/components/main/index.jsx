@@ -29,7 +29,7 @@ export class Main extends Component {
           {step === "rooms" ? <Rooms openRoom={roomId => this.setState({step: "room", roomId})} /> :
            step === "room" ? <Room roomId={roomId} /> :
            step === "questions" ? <Questions /> :
-           undefined}/>
+           undefined}
         </div>
       </div>
     )
