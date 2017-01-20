@@ -1,0 +1,40 @@
+{
+  "env": {
+    "development": {
+      "presets": [
+        [ 
+          "es2015", 
+          { 
+            "modules": false
+          }
+        ],
+        "es2016",
+        "es2017",
+        "stage-2", 
+        "react"
+      ]
+    },
+    "test": {
+      "presets": [
+        [ 
+          "es2015", 
+          { 
+            "modules": "commonjs"
+          }
+        ],
+        "es2016",
+        "es2017",
+        "stage-2", 
+        "react"
+      ]
+    },
+    "server": {
+      "presets": [
+        "es2015",
+        "es2016",
+        "es2017",
+        "stage-2"
+      ]
+    }
+  }
+}

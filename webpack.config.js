@@ -2,10 +2,10 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: {app: [path.resolve(__dirname, "src", "index.js")]},
+  entry: {app: [path.resolve(__dirname, "src", "client", "index.js")]},
   output: {
     filename: "[name].js",
-    path: path.resolve(__dirname, "build"),
+    path: path.resolve(__dirname, "build", "client"),
     publicPath: ""
   },
   resolve: {
@@ -32,7 +32,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       filename: "index.html",
-      template: path.resolve(__dirname, "src", "index.html")
+      template: path.resolve(__dirname, "src", "client", "index.html")
     })
   ]
 };

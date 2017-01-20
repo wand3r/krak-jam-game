@@ -33,6 +33,7 @@
     "webpack-dev-server": "^2.2.0"
   },
   "dependencies": {
+    "express": "^4.14.0",
     "glamor": "^2.20.18"
   }
 }
