@@ -2,20 +2,16 @@ import React, {Component} from 'react'
 import FlipMove from 'react-flip-move'
 import {css} from 'glamor'
 import {processAction} from "../../../lefrex-js/action-processor";
-import {rooms} from "../../../shared/actions/rooms";
+import * as roomsActions from "../../../shared/actions/rooms";
 
-const SingleRoom = ({id, name, desc, admin, teams, join}) => {
+const SingleRoom = ({id, name, teams, join}) => {
     return (
         <div
             {...css({display: "flex", border: "blue 1px solid", padding: "1em", margin: "1em 0"})}
             onClick={() => open(id)}
         >
             <div {...css({flex: 1})}>
-                <div>{name}</div>
-                <div>{admin}</div>
-            </div>
-            <div {...css({flex: 2})}>
-                {desc}
+                {name}
             </div>
             <div {...css({flex: 1})}>
                 {teams.red} vs {teams.blue}
@@ -109,7 +105,14 @@ export class Rooms extends Component {
         rooms: []
     }
     componentDidMount() {
-
+        setTimeout(() => {
+            processAction(roomsActions.createGetRoomsAction())
+                .then((rooms) => {
+                    console.log(rooms) 
+                    this.setState({rooms})
+                })
+                .catch(x => { throw new Error(x) })
+        }, 3000)
     }
     componentWillUnmount() {
 
