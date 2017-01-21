@@ -6,6 +6,14 @@ const userLoginActionHandler = {
     $type: userActions.userLoginAction,
     handle: (action) => {
 
+        if (user.find(u => u.name === action.userName)) {
+            return {
+                $events: [],
+                $result: { message: 'User with that name already exists.' },
+                $resultType: resultTypes.failure
+            };
+        }
+
         const _newUser = {
             id: users.length,
             name: action.userName
