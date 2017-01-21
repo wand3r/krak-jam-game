@@ -16,8 +16,9 @@ console.log('Registered handlers:', Object.keys(_handlers).reduce((l, h) => `${l
 
 _io.on('connection', (sock) => {
     sock.on('action', (action) => {
-
         const _handleResult = _handlers[action.$type](action);
+
+        console.log(action);
 
         sock.emit('action-result', {
             ['$type']: action.$type,
