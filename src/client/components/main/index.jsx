@@ -5,6 +5,7 @@ import { Room } from '..//room'
 import { Questions } from '../questions'
 import { initializeConnection, getConnection } from '../../../lefrex-js/connection-provider'
 import { initialize as initializeActionProcessor } from '../../../lefrex-js/action-processor'
+import { initialize as initializeEventAggregator } from '../../../lefrex-js/event-aggregator'
 
 const steps = {
   rooms: {
@@ -28,6 +29,7 @@ export class Main extends Component {
     initializeConnection()
       .then(x => {
         initializeActionProcessor(getConnection())
+        initializeEventAggregator(getConnection())
         this.setState({connected: true})
       })
       .catch(x => { throw new Error(x) })

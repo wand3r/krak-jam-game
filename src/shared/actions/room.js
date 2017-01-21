@@ -3,11 +3,10 @@ export const room = {
     joinRoomAction: 'room-join-room-action'
 };
 
-export const createCreateRoomAction = (userId, name, desc) => ({
+export const createCreateRoomAction = (userId, name) => ({
     $type: room.createRoomAction,
     userId,
-    name,
-    desc
+    name
 });
 
 export const createJoinRoomAction = (userId, roomId) => ({

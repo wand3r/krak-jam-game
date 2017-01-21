@@ -1,9 +1,8 @@
-import {getConnection} from "./connection-provider";
-
-const _connection = getConnection();
+let _connection = undefined;
 const _subscriptions = {};
 
 export const initialize = (connection) => {
+    _connection = connection;
     _connection.on('push-events', (events) => {
         events.forEach(event => {
             const _handlers = _subscriptions[event.$event] || [];

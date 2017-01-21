@@ -9,7 +9,6 @@ const createRoomActionHandler = {
         const _newRoom = {
             id: rooms.length,
             name: action.name,
-            desc: action.desc,
             players: [action.userId],
             teams: [[], []]
         };
@@ -20,12 +19,7 @@ const createRoomActionHandler = {
             $events: [
                 createRoomCreatedEvent(_newRoom)
             ],
-            $result: rooms.map(r => ({
-                id: r.id,
-                name: r.name,
-                desc: r.desc,
-                teams: r.teams.map(team => team.reduce((sum, t) => (sum + 1), 0))
-            }))
+            $result: { }
         }
     }
 };
