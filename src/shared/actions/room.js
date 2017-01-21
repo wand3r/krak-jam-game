@@ -1,5 +1,6 @@
 export const room = {
-    createRoomAction: 'room-create-room-action'
+    createRoomAction: 'room-create-room-action',
+    joinRoomAction: 'room-join-room-action'
 };
 
 export const createCreateRoomAction = (userId, name, desc) => ({
@@ -7,4 +8,10 @@ export const createCreateRoomAction = (userId, name, desc) => ({
     userId,
     name,
     desc
+});
+
+export const createJoinRoomAction = (userId, roomId) => ({
+    $type: room.joinRoomAction,
+    userId,
+    roomId
 });
