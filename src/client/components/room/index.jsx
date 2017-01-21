@@ -5,16 +5,17 @@ import * as R from 'ramda'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
-export const Player = ({name, state}) => {
+export const Player = ({name, isCurrent, isReady, hasTeam}) => {
     return (
         <div {...css({
             fontSize: "1.3em",
             padding: "0.2em",
             margin: "0.2em",
-            background: state === "ready" ? "green" : 
-                state === "notready" ? "red" : 
-                state === "waiting" ? "gray" :
-                undefined,
+            border: isCurrent ? "black 5px solid" : undefined,
+            background: 
+                isReady ? "green" : 
+                hasTeam ? "red" : 
+                "gray",
         })}>
             <div {...css({
                 display: "flex", justifyContent: "center",
@@ -25,41 +26,48 @@ export const Player = ({name, state}) => {
     )
 }
 
-export const Team = ({teamId, players, join}) => {
+export const Team = ({currentUser, teamId, players, join}) => {
+    const canCurrentUserJoinTeam = !currentUser.isReady && currentUser.teamId !== teamId
     return (
         <div {...css({display: "flex", flexDirection: "column"})}>
             <div {...css({display: "flex", justifyContent: "center", margin: "0.5em"})}>
-                <FloatingActionButton mini={true} onClick={() => join(teamId)}>
+                <FloatingActionButton 
+                    disabled={!canCurrentUserJoinTeam} 
+                    mini={true} 
+                    onClick={() => join(teamId)
+                }>
                     <ContentAdd />
                 </FloatingActionButton>
             </div>
-            {players.map(({name, ready}, index) => {
-                return (
-                    <Player 
-                        name={name}
-                        state={ready ? "ready" : "notready"} 
-                    />
-                )
-            })}
+            {players.map(({id, name, isReady, teamId}) =>
+                <Player 
+                    key={id}
+                    name={name}
+                    isReady={isReady}
+                    isCurrent={currentUser.id === id}
+                    hasTeam={teamId !== id} 
+                /> 
+            )}
         </div>
     )
 }
 
-export const Teams = ({teams, joinTeam}) => {
+export const Teams = ({currentUser, teams, joinTeam}) => {
     const lastTeam = R.last(R.keys(teams)) 
     return (
         <div {...css({display: "flex"})}>
             {R.pipe(
-                R.mapObjIndexed((players, team) => [
-                    <div {...css({flex: 1})}> 
+                R.mapObjIndexed((players, teamId) => [
+                    <div key={teamId} {...css({flex: 1})}> 
                         <Team 
-                            key={team} 
-                            teamId={team} 
+                            key={teamId} 
+                            currentUser={currentUser}
+                            teamId={teamId} 
                             players={players}
                             join={joinTeam} 
                         />
                     </div>,
-                    team !== lastTeam && 
+                    teamId !== lastTeam && 
                     <div {...css({fontSize: "2em", display: "flex", alignItems: "center"})}>
                         VS
                     </div>]), 
@@ -68,52 +76,114 @@ export const Teams = ({teams, joinTeam}) => {
     )
 }
 
-export const WaitingPlayers = ({players}) => {
+export const WaitingPlayers = ({currentUserId, players}) => {
     return (
         <div>
             <h3>Waiting...</h3>
             <div {...css({display: "flex", flexWrap: true})}>
-                {players.map(({name}) => 
-                    <Player name={name} state="waiting" />
+                {players.map(({id, name, isReady, teamId}) => 
+                    <Player 
+                        key={id} 
+                        isCurrent={currentUserId === id} 
+                        name={name} 
+                        isReady={isReady} 
+                        hasTeam={teamId !== undefined}
+                    />
                 )}
             </div>
         </div>
     )
 }
 
-export class Room extends Component {
-  state = {
-      players: [
-          {name: "Player 1", team: "A", ready: true},
-          {name: "Player 2", team: "B", ready: false},
-          {name: "Player 3", team: "A", ready: true },
-          {name: "Player 4", team: undefined},
-          {name: "Player 5", team: "A", ready: false},
-          {name: "Player 6", team: undefined},
-          {name: "Player 7", team: "B", ready: true},
-      ]
-  };
-  render() {
-    const userId = currentUser.id;
-    const { roomId, joinTeam } = this.props;
-    const { players } = this.state;
+export const RoomView = ({ 
+    currentUserId, 
+    roomId, 
+    players, 
+    leaveRoom, 
+    getReady, 
+    joinTeam, 
+}) => {
+    
+    const currentUser = players.find(x => x.id === currentUserId)
+
     const teams = R.pipe(
-        R.filter(x => x.team !== undefined),
-        R.groupBy(x => x.team)
+        R.filter(({teamId}) => teamId !== undefined),
+        R.groupBy(x => x.teamId),
     )(players)
-    const lastTeam = R.last(R.keys(teams))
+
     const waitingPlayers = 
-        players.filter(x => x.team === undefined)
-    console.log(teams)
+        players.filter(({teamId}) => teamId === undefined)
+
     return (
         <div {...css({display: "flex", flexDirection: "column"})}>
-            <Teams teams={teams} joinTeam={(teamId) => joinTeam(userId, roomId, teamId)} />
-            <WaitingPlayers players={waitingPlayers} />
+            <Teams
+                currentUser={currentUser}
+                teams={teams} 
+                joinTeam={teamId => joinTeam(currentUser.id, roomId, teamId)} 
+            />
+            <WaitingPlayers 
+                currentUserId={currentUser.id}
+                players={waitingPlayers} 
+            />
             <div>
-                <button>Ready</button>
-                <button>Leave</button>
+                <button 
+                    disabled={currentUser.teamId == undefined || currentUser.isReady} 
+                    onClick={() => getReady(currentUser.id, roomId)}
+                >
+                    Ready
+                </button>
+                <button onClick={() => leaveRoom(currentUser.id, roomId)}>
+                    Leave
+                </button>
             </div>
         </div>
     )
-  }
+}
+
+export class Room extends Component {
+    state = {
+        roomId: 1,
+        currentUserId: currentUser.id,
+        players: [
+          {id: '1', name: "Player 1", teamId: undefined, isReady: false},
+          {id: '2', name: "Player 2", teamId: "B", isReady: false},
+          {id: '3', name: "Player 3", teamId: "A", isReady: true },
+          {id: '4', name: "Player 4", teamId: undefined},
+          {id: '5', name: "Player 5", teamId: "A", isReady: false},
+          {id: '6', name: "Player 6", teamId: undefined},
+          {id: '7', name: "Player 7", teamId: "B", isReady: true},
+        ]
+    }
+    updateUser = (userId, wholeState, oldUserState) => ({
+        ...wholeState,
+        players: [
+            ...wholeState.players.filter(x => x.id !== userId),
+            { ...wholeState.players.find(x => x.id === userId), ...oldUserState}
+        ]
+    })
+    leaveRoom = (userId, roomId) => {
+
+    }
+    getReady = (userId, roomId) => {
+        this.setState(s => this.updateUser(userId, s, { isReady: true }));
+    }
+    joinTeam = (userId, roomId, teamId) => {
+        this.setState(s => this.updateUser(userId, s, { teamId }))
+    }
+    componentDidMount() {
+
+    }
+    render() {
+        const { roomId, currentUserId, players } = this.state
+        return (
+            <RoomView 
+                roomId={roomId} 
+                currentUserId={currentUserId}
+                players={players}
+                leaveRoom={this.leaveRoom} 
+                getReady={this.getReady}
+                joinTeam={this.joinTeam} 
+            />
+        )
+    }
 }
