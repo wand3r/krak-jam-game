@@ -4,9 +4,9 @@ import v4 from 'uuid/v4';
 const _connection = getConnection();
 const _awaitedActions = {};
 
-_connection.on('action-result', (result) => {
-    _awaitedActions[result.$id](result.$result);
-    delete _awaitedActions[result.$id];
+_connection.on('action-result', ({$id, $result}) => {
+    _awaitedActions[$id]($result);
+    delete _awaitedActions[$id];
 });
 
 export const processAction = (action) => {
