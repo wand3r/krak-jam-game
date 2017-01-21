@@ -197,9 +197,9 @@ export class Room extends Component {
         // this.eventUnsubscribtions = [];
     }
     fetchRoomDetails = () => {
-        console.log("Room id %O", this.props.roomId)
         processAction(roomActions.createGetRoomDetailsAction(this.props.roomId))
         .then(players => {
+            console.log("Fetched %O players", players)
             this.setState({players});
         })
     }
@@ -227,14 +227,16 @@ export class Room extends Component {
         console.log("User id %O", userId)
         console.log("Players: %O", players)
         return (
-            <RoomView 
+            players.length > 0 
+            ? <RoomView 
                 roomId={roomId} 
                 currentUserId={userId}
                 players={players}
                 leaveRoom={this.leaveRoom}
                 getReady={this.getReady}
                 joinTeam={this.joinTeam}
-            />
+              />
+            : null
         )
     }
 }

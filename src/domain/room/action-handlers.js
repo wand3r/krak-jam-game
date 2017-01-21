@@ -79,5 +79,6 @@ const getRoomDetailsActionHandler = {
 export const room = [
     createRoomActionHandler,
     joinRoomActionHandler,
-    getRoomsActionHandler
+    getRoomsActionHandler,
+    getRoomDetailsActionHandler,
 ];

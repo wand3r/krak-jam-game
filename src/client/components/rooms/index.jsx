@@ -31,14 +31,15 @@ const SingleRoom = ({id, name, teams, join}) => {
                     ))}</span>
                 </div>
                 <span {...css({display: 'flex', alignItems: 'center'})}>
-    <SocialPerson style={{width: 48, height: 48}} color={'rgb(255, 235, 59)'}/>
-    <span>{teams[0].length} vs {teams[1].length}</span>
-    <RaisedButton
-        style={{marginLeft: '18px'}}
-        backgroundColor={'rgb(255, 235, 59)'}
-        label="Join game"
-        icon={<ActionPanTool/>}/>
-    </span>
+                <SocialPerson style={{width: 48, height: 48}} color={'rgb(255, 235, 59)'}/>
+                <span>{teams[0].length} vs {teams[1].length}</span>
+                <RaisedButton
+                    style={{marginLeft: '18px'}}
+                    backgroundColor={'rgb(255, 235, 59)'}
+                    label="Join game"
+                    onClick={() => join(id)}
+                    icon={<ActionPanTool/>}/>
+                </span>
             </div>
         </Card>
     )
@@ -165,6 +166,7 @@ export class Rooms extends Component {
     }
 
     joinRoom = (roomId) => {
+        console.log("Join to room: %O", roomId)
         processAction(roomActions.createJoinRoomAction(
             this.props.user.id,
             roomId
