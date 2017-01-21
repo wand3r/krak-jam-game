@@ -2,6 +2,7 @@ import {rooms} from "../../data/rooms";
 import {users} from "../../data/users";
 import {room as roomActions} from "./actions";
 import {createRoomCreatedEvent, createPlayerJoinedEvent} from "./events";
+import {resultTypes} from "../../lefrex-js/result-types";
 
 const createRoomActionHandler = {
     $type: roomActions.createRoomAction,
@@ -18,7 +19,8 @@ const createRoomActionHandler = {
             $events: [
                 createRoomCreatedEvent(_newRoom)
             ],
-            $result: { }
+            $result: { },
+            $resultType: resultTypes.success
         }
     }
 };
@@ -34,7 +36,8 @@ const joinRoomActionHandler = {
             $events: [
                 createPlayerJoinedEvent({id: _user.id, name: _user.name})
             ],
-            $result: {}
+            $result: {},
+            $resultType: resultTypes.success
         }
     }
 };
@@ -49,7 +52,8 @@ const getRoomsActionHandler = {
                 name: r.name,
                 desc: r.desc,
                 teams: r.teams.map(team => team.reduce((sum, t) => (sum + 1), 0))
-            }))
+            })),
+            $resultType: resultTypes.success
         }
     }
 };
@@ -58,4 +62,4 @@ export const room = [
     createRoomActionHandler,
     joinRoomActionHandler,
     getRoomsActionHandler
-]
+];
