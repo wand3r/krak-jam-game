@@ -22,7 +22,6 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 
 const SingleRoom = ({id, name, teams, join}) => {
     const players = [...teams[0], ...teams[1]];
-    console.log(players);
     return (
         <Card style={{backgroundColor: 'transparent'}}>
             <div {...css({display: 'flex', alignItems: 'row', padding: '18px'})}>
