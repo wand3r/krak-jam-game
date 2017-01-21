@@ -1,9 +1,48 @@
 import React, { Component } from "react"
-import {Team} from "../team";
 import {currentUser} from '../../userProfile';
+import {css} from "glamor"
+
+export const Team = ({players}) => {
+    return (
+        <div {...css({display: "flex", flexDirection: "column"})}>
+        {
+            players.map(({name, acepted}) => {
+                return (
+                    <div {...css({
+                        fontSize: "1.3em",
+                        padding: "0.2em",
+                        margin: "0.2em",
+                        background: acepted ? "green" : "red"
+                    })}>
+                        <div {...css({
+                            display: "flex", justifyContent: "center",
+                        })}>
+                            {name}
+                        </div>
+                    </div>
+                )
+            })
+        }
+        </div>
+    )
+}
+
+export const WaitingPlayers = ({players}) => {
+    return (
+        <div {...css({display: "flex", flexWrap: true})}>
+            {players.map(({name}) => 
+                <div>
+                    {name}
+                </div>)}
+        </div>
+    )
+}
 
 export class Room extends Component {
   state = {
+    //   teams: [
+    //       { id: "", players: []}
+    //   ] 
       red: {
         name: 'Red',
           players: [
@@ -17,6 +56,7 @@ export class Room extends Component {
           players: [
               {name: 'Wojciech', id: '5'},
               {name: 'Rafik', id: '6'},
+              {name: 'Maciej', id: '7'},
               {name: 'Maciej', id: '7'},
           ]
       }
@@ -35,20 +75,24 @@ export class Room extends Component {
   render() {
     const { roomId } = this.props;
     return (
-      <div>
-        <div>
-           <Team name={this.state.red.name} players={this.state.red.players}/>
+        <div {...css({display: "flex", flexDirection: "column"})}>
+            <div {...css({display: "flex"})}>
+                <div {...css({flex: 1})}>
+                    <Team name={this.state.red.name} players={this.state.red.players}/>
+                </div>
+                <div {...css({
+                    display: "flex", justifyContent: "center", alignItems: "center",
+                    fontSize: "3em",
+                })}>
+                    VS
+                </div>
+                <div {...css({flex: 1})}>
+                    <Team players={this.state.blue.players}/>
+                </div>
+            </div>
             <div>
-                <button onClick={() => this.join('red',currentUser)}>Sit</button>
             </div>
         </div>
-          <div>
-            <Team name={this.state.blue.name} players={this.state.blue.players}/>
-            <div>
-                <button onClick={() => this.join('blue',currentUser)}>Sit</button>
-            </div>
-          </div>
-      </div>
     )
   }
 }

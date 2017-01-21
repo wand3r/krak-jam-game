@@ -2,7 +2,9 @@ import React, {Component} from 'react'
 import FlipMove from 'react-flip-move'
 import {css} from 'glamor'
 import {processAction} from "../../../lefrex-js/action-processor";
+import {subscribeToEvent} from "../../../lefrex-js/event-aggregator";
 import * as roomActions from "../../../domain/room/actions";
+import * as roomEvents from "../../../domain/room/events";
 import {ModalContainer, ModalDialog} from 'react-modal-dialog'
 import { currentUser } from '../../userProfile'
 
@@ -10,7 +12,6 @@ const SingleRoom = ({id, name, teams, join}) => {
     return (
         <div
             {...css({display: "flex", border: "blue 1px solid", padding: "1em", margin: "1em 0"})}
-            onClick={() => open(id)}
         >
             <div {...css({flex: 1})}>
                 {name}
@@ -33,6 +34,7 @@ export class RoomsView extends Component {
   };
   render() {
     const { rooms, joinRoom, createRoom } = this.props
+    console.log(rooms)
     const { roomNameSearch, creatingRoom } = this.state
     const filteredRooms = rooms.filter(({name}) => name.includes(roomNameSearch))
     return (
@@ -107,20 +109,29 @@ export class Rooms extends Component {
         rooms: []
     };
     componentDidMount() {
+        this.fetchRoomsList();
+        subscribeToEvent(
+            roomEvents.room.roomCreatedEvent, 
+            (room) =>  { 
+                this.fetchRoomsList()
+            }
+        )
+    }
+    componentWillUnmount() {
+
+    }
+    fetchRoomsList = () => {
         processAction(roomActions.createGetRoomsAction())
             .then((rooms) => {
                 this.setState({rooms});
             })
             .catch(x => { throw new Error(x) });
     }
-    componentWillUnmount() {
-
-    }
     createRoom = (name) => {
-        processAction(roomActions.createCreateRoomAction({
-            userId: currentUser.id,
+        processAction(roomActions.createCreateRoomAction(
+            currentUser.id,
             name,
-        }))
+        ))
     }
     joinRoom = (roomId) => {
 

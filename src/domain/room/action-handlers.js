@@ -13,7 +13,6 @@ const createRoomActionHandler = {
             players: [action.userId],
             teams: [[], []]
         };
-
         rooms.push(_newRoom);
 
         return {
