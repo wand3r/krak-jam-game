@@ -55,7 +55,7 @@ const getRoomsActionHandler = {
     }
 };
 
-export default [
+export const room = [
     createRoomActionHandler,
     joinRoomActionHandler,
     getRoomsActionHandler

@@ -1,10 +1,11 @@
-import React, { Component } from "react"
-import { css } from 'glamor'
-import { Rooms } from '../rooms'
-import { Questions } from '../questions'
-import { initializeConnection, getConnection } from '../../../lefrex-js/connection-provider'
-import { initialize as initializeActionProcessor } from '../../../lefrex-js/action-processor'
-import { initialize as initializeEventAggregator } from '../../../lefrex-js/event-aggregator'
+import React, { Component } from "react";
+import { css } from 'glamor';
+import { Rooms } from '../rooms';
+import { Room } from '../room';
+import { Questions } from '../questions';
+import { initializeConnection, getConnection } from '../../../lefrex-js/connection-provider';
+import { initialize as initializeActionProcessor } from '../../../lefrex-js/action-processor';
+import { initialize as initializeEventAggregator } from '../../../lefrex-js/event-aggregator';
 
 const steps = {
   rooms: {

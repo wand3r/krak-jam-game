@@ -30,11 +30,11 @@ export class RoomsView extends Component {
   state = {
     roomNameSearch: "",
     creatingRoom: false,
-  }
+  };
   render() {
     const { rooms, joinRoom, createRoom } = this.props
     const { roomNameSearch, creatingRoom } = this.state
-    const filterdRooms = rooms.filter(({name}) => name.includes(roomNameSearch))
+    const filteredRooms = rooms.filter(({name}) => name.includes(roomNameSearch))
     return (
       <div {...css({
         display: "flex", flexDirection: "column",
@@ -84,7 +84,7 @@ export class RoomsView extends Component {
         </div>
         <div {...css({flex: "1"})}>
           <FlipMove>
-            {filterdRooms.map((room, index) => ( 
+            {filteredRooms.map((room, index) => (
               <div key={room.id}>
                 <SingleRoom 
                   {...room}
@@ -105,14 +105,13 @@ export class RoomsView extends Component {
 export class Rooms extends Component {
     state = {
         rooms: []
-    }
+    };
     componentDidMount() {
         processAction(roomActions.createGetRoomsAction())
             .then((rooms) => {
-                console.log(rooms) 
-                this.setState({rooms})
+                this.setState({rooms});
             })
-            .catch(x => { throw new Error(x) })
+            .catch(x => { throw new Error(x) });
     }
     componentWillUnmount() {
 
