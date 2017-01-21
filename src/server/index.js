@@ -16,11 +16,15 @@ console.log(_handlers);
 
 _io.on('connection', (sock) => {
     sock.on('action', (action) => {
+
+        const _handleResult = _handlers[action.$type](action);
+
         sock.emit('action-result', {
             ['$type']: action.$type,
             ['$id']: action.$id,
-            ['$result']: _handlers[action.$type](action)
+            ['$result']: _handleResult.$result
         });
+
     });
 });
 
