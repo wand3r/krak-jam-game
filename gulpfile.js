@@ -31,7 +31,7 @@ gulp.task('build', function(cb){
 });
 
 gulp.task('watch', function (cb) {
-    gulp.watch('./src/server/**', function(){
+    gulp.watch('./src/**', function(){
         runSequence('build', 'server');
     });
 });

@@ -2,33 +2,31 @@ import React, {Component} from 'react'
 import FlipMove from 'react-flip-move'
 import {css} from 'glamor'
 import {processAction} from "../../../lefrex-js/action-processor";
-import rooms from "../../../shared/actions/rooms";
-import {ModalContainer, ModalDialog} from 'react-modal-dialog'
-
-// setTimeout(() => {
-//     processAction({$type: rooms.get}).then(result => {
-//         console.log(result);
-//     });
-// }, 5000);
+import {rooms} from "../../../shared/actions/rooms";
 
 const SingleRoom = ({id, name, desc, admin, teams, join}) => {
-  return (
-    <div 
-      {...css({display: "flex", border: "blue 1px solid", padding: "1em", margin: "1em 0"})} 
-      onClick={() => open(id)}
-    >
-      <div {...css({flex: 1})}>
-        <div>{name}</div>
-      </div>
-      <div {...css({flex: 1})}>
-        {teams.red} vs {teams.blue}
-      </div>
-      <button {...css({width: 100, height: '100%'})} onClick={() => join(id)}>
-        Join
-      </button> 
-    </div>
-  )
-}
+    return (
+        <div
+            {...css({display: "flex", border: "blue 1px solid", padding: "1em", margin: "1em 0"})}
+            onClick={() => open(id)}
+        >
+            <div {...css({flex: 1})}>
+                <div>{name}</div>
+                <div>{admin}</div>
+            </div>
+            <div {...css({flex: 2})}>
+                {desc}
+            </div>
+            <div {...css({flex: 1})}>
+                {teams.red} vs {teams.blue}
+            </div>
+            <button {...css({width: 100})} onClick={() => join(id)}>
+                Join
+            </button>
+        </div>
+    )
+};
+
 
 export class RoomsView extends Component {
   state = {
