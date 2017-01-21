@@ -3,7 +3,9 @@ import FlipMove from 'react-flip-move'
 import {css} from 'glamor'
 import {processAction} from "../../../lefrex-js/action-processor";
 import * as roomsActions from "../../../shared/actions/rooms";
+import * as roomActions from "../../../shared/actions/room";
 import {ModalContainer, ModalDialog} from 'react-modal-dialog'
+import { currentUser } from '../../userProfile'
 
 const SingleRoom = ({id, name, teams, join}) => {
     return (
@@ -116,8 +118,11 @@ export class Rooms extends Component {
     componentWillUnmount() {
 
     }
-    createRoom = (roomName) => {
-
+    createRoom = (name) => {
+        processAction(roomActions.createCreateRoomAction({
+            userId: currentUser.id,
+            name,
+        }))
     }
     joinRoom = (roomId) => {
 
