@@ -2,8 +2,7 @@ import React, {Component} from 'react'
 import FlipMove from 'react-flip-move'
 import {css} from 'glamor'
 import {processAction} from "../../../lefrex-js/action-processor";
-import * as roomsActions from "../../../shared/actions/rooms";
-import * as roomActions from "../../../shared/actions/room";
+import * as roomActions from "../../../domain/room/actions";
 import {ModalContainer, ModalDialog} from 'react-modal-dialog'
 import { currentUser } from '../../userProfile'
 
@@ -31,11 +30,11 @@ export class RoomsView extends Component {
   state = {
     roomNameSearch: "",
     creatingRoom: false,
-  }
+  };
   render() {
     const { rooms, joinRoom, createRoom } = this.props
     const { roomNameSearch, creatingRoom } = this.state
-    const filterdRooms = rooms.filter(({name}) => name.includes(roomNameSearch))
+    const filteredRooms = rooms.filter(({name}) => name.includes(roomNameSearch))
     return (
       <div {...css({
         display: "flex", flexDirection: "column",
@@ -85,7 +84,7 @@ export class RoomsView extends Component {
         </div>
         <div {...css({flex: "1"})}>
           <FlipMove>
-            {filterdRooms.map((room, index) => ( 
+            {filteredRooms.map((room, index) => (
               <div key={room.id}>
                 <SingleRoom 
                   {...room}
@@ -106,14 +105,13 @@ export class RoomsView extends Component {
 export class Rooms extends Component {
     state = {
         rooms: []
-    }
+    };
     componentDidMount() {
-        processAction(roomsActions.createGetRoomsAction())
+        processAction(roomActions.createGetRoomsAction())
             .then((rooms) => {
-                console.log(rooms) 
-                this.setState({rooms})
+                this.setState({rooms});
             })
-            .catch(x => { throw new Error(x) })
+            .catch(x => { throw new Error(x) });
     }
     componentWillUnmount() {
 

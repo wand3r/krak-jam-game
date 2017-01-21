@@ -12,7 +12,7 @@ const _server = createServer(_app);
 const _io = Server(_server);
 
 const _handlers = combineHandlers(handlers);
-console.log(_handlers);
+console.log('Registered handlers:', Object.keys(_handlers).reduce((l, h) => `${l}, ${h}`));
 
 _io.on('connection', (sock) => {
     sock.on('action', (action) => {
