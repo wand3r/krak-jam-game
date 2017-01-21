@@ -5,11 +5,20 @@ import {processAction} from "../../../lefrex-js/action-processor";
 import {subscribeToEvent} from "../../../lefrex-js/event-aggregator";
 import * as roomActions from "../../../domain/room/actions";
 import * as roomEvents from "../../../domain/room/events";
-import {ModalContainer, ModalDialog} from 'react-modal-dialog'
-import {currentUser} from '../../userProfile'
-import {FontIcon, RaisedButton, Card, Subheader, TextField} from 'material-ui';
+import {
+    FontIcon,
+    Dialog,
+    FlatButton,
+    RaisedButton,
+    FloatingActionButton,
+    Card,
+    Subheader,
+    TextField
+} from 'material-ui';
 import SocialPerson from 'material-ui/svg-icons/social/person';
 import ActionPanTool from 'material-ui/svg-icons/action/pan-tool';
+import {currentUser} from '../../userProfile'
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
 const SingleRoom = ({id, name, teams, join}) => {
     const players = [...teams[0], ...teams[1]];
@@ -24,14 +33,14 @@ const SingleRoom = ({id, name, teams, join}) => {
                     ))}</span>
                 </div>
                 <span {...css({display: 'flex', alignItems: 'center'})}>
-                    <SocialPerson style={{width: 48, height: 48}} color={'rgb(255, 235, 59)'}/>
-                    <span>{teams[0].length} vs {teams[1].length}</span>
-                    <RaisedButton
-                        style={{marginLeft: '18px'}}
-                        backgroundColor={'rgb(255, 235, 59)'}
-                        label="Join game"
-                        icon={<ActionPanTool/>}/>
-                </span>
+    <SocialPerson style={{width: 48, height: 48}} color={'rgb(255, 235, 59)'}/>
+    <span>{teams[0].length} vs {teams[1].length}</span>
+    <RaisedButton
+        style={{marginLeft: '18px'}}
+        backgroundColor={'rgb(255, 235, 59)'}
+        label="Join game"
+        icon={<ActionPanTool/>}/>
+    </span>
             </div>
         </Card>
     )
@@ -76,27 +85,30 @@ export class RoomsView extends Component {
                     </button>
                     {
                         creatingRoom &&
-                        <ModalContainer onClose={() => this.setState({creatingRoom: false})}>
-                            <ModalDialog style={{borderRadius: '0px'}}
-                                         onClose={() => this.setState({creatingRoom: false})}>
-                                <Card>
-                                    <span {...css({fontSize: '24px', margin: '18px', color: '#444', padding: '12px'})}>Creating new room</span>
-                                    <div {...css({padding: '18px'})}>
-                                        <TextField onChange={({target:{value}}) => this.setState({newRoomName: value})}
-                                                   hintText="Type your room name"
-                                                   style={{margin: '10px'}}/>
-                                        <RaisedButton
-                                            label="Create room"
-                                            onClick={() => {
-                                                createRoom(this.state.newRoomName);
-                                                this.setState({creatingRoom: false});
-                                            }
-                                            }
-                                            primary={true}/>
-                                    </div>
-                                </Card>
-                            </ModalDialog>
-                        </ModalContainer>
+                        <Dialog
+                            title="Create Room"
+                            actions={[]}
+                            modal={true}
+                            open={creatingRoom}
+                            onRequestClose={() => this.setState({creatingRoom: false})}
+                        >
+                            <Card>
+                                <div {...css({width: '100%', display: 'flex', flexDirection: 'column', padding: '18px'})}>
+                                    <TextField onChange={({target:{value}}) => this.setState({newRoomName: value})}
+                                               hintText="Type your room name"
+                                               fullWidth={true}
+                                               style={{margin: '10px'}}/>
+                                    <RaisedButton
+                                        label="Create room"
+                                        onClick={() => {
+                                            createRoom(this.state.newRoomName);
+                                            this.setState({creatingRoom: false});
+                                        }
+                                        }
+                                        primary={true}/>
+                                </div>
+                            </Card>
+                        </Dialog>
                     }
                 </div>
                 <div {...css({flex: "1"})}>
@@ -118,7 +130,6 @@ export class RoomsView extends Component {
         )
     }
 }
-
 export class Rooms extends Component {
     state = {
         rooms: []

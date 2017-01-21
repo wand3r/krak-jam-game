@@ -1,11 +1,11 @@
 import React from "react";
-import {storiesOf} from "@kadira/storybook";
+import {storiesOf, action} from "@kadira/storybook";
 import {Room} from "./";
 
 storiesOf("SampleComponent", module)
     .add(
         "room",
         () => (
-            <Room roomId={1} />
+            <Room joinTeam={action('Join team')} roomId={10} />
         )
     );

@@ -1,39 +1,82 @@
 import React, { Component } from "react"
 import {currentUser} from '../../userProfile';
 import {css} from "glamor"
+import * as R from 'ramda'
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
-export const Team = ({players}) => {
+export const Player = ({name, state}) => {
+    return (
+        <div {...css({
+            fontSize: "1.3em",
+            padding: "0.2em",
+            margin: "0.2em",
+            background: state === "ready" ? "green" : 
+                state === "notready" ? "red" : 
+                state === "waiting" ? "gray" :
+                undefined,
+        })}>
+            <div {...css({
+                display: "flex", justifyContent: "center",
+            })}>
+                {name}
+            </div>
+        </div>
+    )
+}
+
+export const Team = ({teamId, players, join}) => {
     return (
         <div {...css({display: "flex", flexDirection: "column"})}>
-        {
-            players.map(({name, acepted}) => {
+            <div {...css({display: "flex", justifyContent: "center", margin: "0.5em"})}>
+                <FloatingActionButton mini={true} onClick={() => join(teamId)}>
+                    <ContentAdd />
+                </FloatingActionButton>
+            </div>
+            {players.map(({name, ready}, index) => {
                 return (
-                    <div {...css({
-                        fontSize: "1.3em",
-                        padding: "0.2em",
-                        margin: "0.2em",
-                        background: acepted ? "green" : "red"
-                    })}>
-                        <div {...css({
-                            display: "flex", justifyContent: "center",
-                        })}>
-                            {name}
-                        </div>
-                    </div>
+                    <Player 
+                        name={name}
+                        state={ready ? "ready" : "notready"} 
+                    />
                 )
-            })
-        }
+            })}
+        </div>
+    )
+}
+
+export const Teams = ({teams, joinTeam}) => {
+    const lastTeam = R.last(R.keys(teams)) 
+    return (
+        <div {...css({display: "flex"})}>
+            {R.pipe(
+                R.mapObjIndexed((players, team) => [
+                    <div {...css({flex: 1})}> 
+                        <Team 
+                            key={team} 
+                            teamId={team} 
+                            players={players}
+                            join={joinTeam} 
+                        />
+                    </div>,
+                    team !== lastTeam && 
+                    <div {...css({fontSize: "2em", display: "flex", alignItems: "center"})}>
+                        VS
+                    </div>]), 
+                R.values)(teams)}
         </div>
     )
 }
 
 export const WaitingPlayers = ({players}) => {
     return (
-        <div {...css({display: "flex", flexWrap: true})}>
-            {players.map(({name}) => 
-                <div>
-                    {name}
-                </div>)}
+        <div>
+            <h3>Waiting...</h3>
+            <div {...css({display: "flex", flexWrap: true})}>
+                {players.map(({name}) => 
+                    <Player name={name} state="waiting" />
+                )}
+            </div>
         </div>
     )
 }
@@ -41,63 +84,34 @@ export const WaitingPlayers = ({players}) => {
 export class Room extends Component {
   state = {
       players: [
-          {name: "", team: "A"},
-          {name: "", team: "B"},
-          {name: "", team: "A"},
-          {name: "", team: undefined},
-          {name: "", team: "B"},
-          {name: "", team: undefined},
-          {name: "", team: "A"},
-      ],
-
-      red: {
-        name: 'Red',
-          players: [
-              {name: 'Wojciech', id: '2'},
-              {name: 'Rafik', id: '3'},
-              {name: 'Maciej', id: '4'},
-          ]
-      },
-      blue: {
-        name: 'Blue',
-          players: [
-              {name: 'Wojciech', id: '5'},
-              {name: 'Rafik', id: '6'},
-              {name: 'Maciej', id: '7'},
-              {name: 'Maciej', id: '7'},
-          ]
-      }
+          {name: "Player 1", team: "A", ready: true},
+          {name: "Player 2", team: "B", ready: false},
+          {name: "Player 3", team: "A", ready: true },
+          {name: "Player 4", team: undefined},
+          {name: "Player 5", team: "A", ready: false},
+          {name: "Player 6", team: undefined},
+          {name: "Player 7", team: "B", ready: true},
+      ]
   };
-
-  join(team, currentUser){
-      this.setState({
-          ...this.state,
-          [team]: {
-              ...this.state[team],
-              players: [...this.state[team].players, currentUser]
-          }
-      })
-  }
-
   render() {
-    const { roomId } = this.props;
+    const userId = currentUser.id;
+    const { roomId, joinTeam } = this.props;
+    const { players } = this.state;
+    const teams = R.pipe(
+        R.filter(x => x.team !== undefined),
+        R.groupBy(x => x.team)
+    )(players)
+    const lastTeam = R.last(R.keys(teams))
+    const waitingPlayers = 
+        players.filter(x => x.team === undefined)
+    console.log(teams)
     return (
         <div {...css({display: "flex", flexDirection: "column"})}>
-            <div {...css({display: "flex"})}>
-                <div {...css({flex: 1})}>
-                    <Team name={this.state.red.name} players={this.state.red.players}/>
-                </div>
-                <div {...css({
-                    display: "flex", justifyContent: "center", alignItems: "center",
-                    fontSize: "3em",
-                })}>
-                    VS
-                </div>
-                <div {...css({flex: 1})}>
-                    <Team players={this.state.blue.players}/>
-                </div>
-            </div>
+            <Teams teams={teams} joinTeam={(teamId) => joinTeam(userId, roomId, teamId)} />
+            <WaitingPlayers players={waitingPlayers} />
             <div>
+                <button>Ready</button>
+                <button>Leave</button>
             </div>
         </div>
     )
