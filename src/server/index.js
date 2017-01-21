@@ -22,7 +22,8 @@ _io.on('connection', (sock) => {
         sock.emit('action-result', {
             ['$type']: action.$type,
             ['$id']: action.$id,
-            ['$result']: _handleResult.$result
+            ['$result']: _handleResult.$result,
+            ['$resultType']: _handleResult.$resultType
         });
 
         _io.emit('push-events', _handleResult.$events);
