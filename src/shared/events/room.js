@@ -4,5 +4,5 @@ export const room = {
 
 export const createRoomCreatedEvent = (source) => ({
     $event: room.roomCreatedEvent,
-    source
+    $payload: source
 });

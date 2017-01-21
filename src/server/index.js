@@ -25,6 +25,7 @@ _io.on('connection', (sock) => {
             ['$result']: _handleResult.$result
         });
 
+        _io.emit('push-events', _handleResult.$events);
     });
 });
 
