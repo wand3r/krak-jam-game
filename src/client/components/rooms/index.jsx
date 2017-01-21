@@ -2,7 +2,13 @@ import React, {Component} from 'react'
 import FlipMove from 'react-flip-move'
 import {css} from 'glamor'
 import {processAction} from "../../../lefrex-js/action-processor";
-import {rooms} from "../../../shared/actions/rooms";
+import {rooms, createGetRoomsAction} from "../../../shared/actions/rooms";
+
+setTimeout(()=>{
+    processAction(createGetRoomsAction()).then(x => {
+        console.log(x);
+    });
+}, 5000);
 
 const SingleRoom = ({id, name, desc, admin, teams, join}) => {
     return (

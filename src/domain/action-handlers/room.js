@@ -5,9 +5,16 @@ import {createRoomCreatedEvent} from "../../shared/events/room";
 const createRoomActionHandler = {
     $type: roomActions.createRoomAction,
     handle: (action) => {
-        const _newRoom = {};
+        const _newRoom = {
+            id: rooms.length,
+            name: action.name,
+            desc: action.desc,
+            players: [action.userId],
+            teams: [[], []]
+        };
 
         rooms.push(_newRoom);
+
         return {
             $events: [
                 createRoomCreatedEvent(_newRoom)
