@@ -7,6 +7,7 @@ import * as roomActions from "../../../domain/room/actions";
 import * as roomEvents from "../../../domain/room/events";
 import {ModalContainer, ModalDialog} from 'react-modal-dialog'
 import { currentUser } from '../../userProfile'
+import FlatButton from 'material-ui/FlatButton';
 
 const SingleRoom = ({id, name, teams, join}) => {
     return (
@@ -19,9 +20,7 @@ const SingleRoom = ({id, name, teams, join}) => {
             <div {...css({flex: 1})}>
                 {teams[0]} vs {teams[1]}
             </div>
-            <button {...css({width: 100})} onClick={() => join(id)}>
-                Join
-            </button>
+            <FlatButton label="Join" primary={true} onClick={() => join(id)}/>
         </div>
     )
 };

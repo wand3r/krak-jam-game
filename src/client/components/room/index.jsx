@@ -40,9 +40,16 @@ export const WaitingPlayers = ({players}) => {
 
 export class Room extends Component {
   state = {
-    //   teams: [
-    //       { id: "", players: []}
-    //   ] 
+      players: [
+          {name: "", team: "A"},
+          {name: "", team: "B"},
+          {name: "", team: "A"},
+          {name: "", team: undefined},
+          {name: "", team: "B"},
+          {name: "", team: undefined},
+          {name: "", team: "A"},
+      ],
+
       red: {
         name: 'Red',
           players: [

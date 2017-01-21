@@ -7,6 +7,6 @@ storiesOf("LoginScreen", module)
   .add(
     "login screen",
     () => (
-      <h3>Dupka</h3>
+      <h3>Dupka sdf</h3>
     )
   );
