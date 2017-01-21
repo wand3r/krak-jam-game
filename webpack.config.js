@@ -10,7 +10,7 @@ module.exports = {
   },
   resolve: {
     modules: ["node_modules"],
-    extensions: [".js", ".jsx"],
+    extensions: [".js", ".jsx", ".scss", ".css"],
     alias: {utils: path.resolve(__dirname, "src", "utils", "index.js")}
   },
   devtool: "eval-source-map",
@@ -29,9 +29,10 @@ module.exports = {
       },
       {
         test: [/\.scss$/],
+        include: [path.resolve(__dirname, "node_modules", "react-toolbox")],        
         use: [
           {loader: "style-loader"},
-          {loader: "css-loader"},
+          {loader: "css-loader?modules"},
           {loader: "sass-loader"},
         ] 
       }
