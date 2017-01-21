@@ -2,8 +2,7 @@ import React, {Component} from 'react'
 import FlipMove from 'react-flip-move'
 import {css} from 'glamor'
 import {processAction} from "../../../lefrex-js/action-processor";
-import * as roomsActions from "../../../shared/actions/rooms";
-import * as roomActions from "../../../shared/actions/room";
+import * as roomActions from "../../../domain/room/actions";
 import {ModalContainer, ModalDialog} from 'react-modal-dialog'
 import { currentUser } from '../../userProfile'
 
@@ -108,7 +107,7 @@ export class Rooms extends Component {
         rooms: []
     }
     componentDidMount() {
-        processAction(roomsActions.createGetRoomsAction())
+        processAction(roomActions.createGetRoomsAction())
             .then((rooms) => {
                 console.log(rooms) 
                 this.setState({rooms})

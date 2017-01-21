@@ -4,7 +4,7 @@ import Server from 'socket.io';
 import {join} from 'path';
 import {combineHandlers} from "../lefrex-js";
 
-import {handlers} from "../domain/action-handlers";
+import * as handlers from "../domain/action-handlers";
 
 const _app = new express();
 

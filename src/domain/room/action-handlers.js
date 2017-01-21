@@ -1,7 +1,7 @@
-import {room as roomActions} from "../../shared/actions/room";
 import {rooms} from "../../data/rooms";
-import {createRoomCreatedEvent, createPlayerJoinedEvent} from "../../shared/events/room";
 import {users} from "../../data/users";
+import {room as roomActions} from "./actions";
+import {createRoomCreatedEvent, createPlayerJoinedEvent} from "./events";
 
 const createRoomActionHandler = {
     $type: roomActions.createRoomAction,
@@ -40,7 +40,23 @@ const joinRoomActionHandler = {
     }
 };
 
+const getRoomsActionHandler = {
+    $type: roomActions.getRoomsAction,
+    handle: (action) => {
+        return {
+            $events: [],
+            $result: rooms.map(r => ({
+                id: r.id,
+                name: r.name,
+                desc: r.desc,
+                teams: r.teams.map(team => team.reduce((sum, t) => (sum + 1), 0))
+            }))
+        }
+    }
+};
+
 export default [
     createRoomActionHandler,
-    joinRoomActionHandler
+    joinRoomActionHandler,
+    getRoomsActionHandler
 ]

@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import { css } from 'glamor'
 import { Rooms } from '../rooms'
-import { Room } from '..//room'
 import { Questions } from '../questions'
 import { initializeConnection, getConnection } from '../../../lefrex-js/connection-provider'
 import { initialize as initializeActionProcessor } from '../../../lefrex-js/action-processor'
@@ -24,18 +23,18 @@ export class Main extends Component {
     connected: false,
     step: "rooms",
     roomId: undefined,
-  }
+  };
   componentDidMount() {
     initializeConnection()
       .then(x => {
-        initializeActionProcessor(getConnection())
-        initializeEventAggregator(getConnection())
+        initializeActionProcessor(getConnection());
+        initializeEventAggregator(getConnection());
         this.setState({connected: true})
       })
       .catch(x => { throw new Error(x) })
-  }
+  };
   render() {
-    const { step, roomId, connected } = this.state
+    const { step, roomId, connected } = this.state;
     return (
       <div {...css({width: "100%", padding: "2em"})}>
       {connected &&
