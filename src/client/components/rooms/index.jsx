@@ -17,7 +17,6 @@ import {
 } from 'material-ui';
 import SocialPerson from 'material-ui/svg-icons/social/person';
 import ActionPanTool from 'material-ui/svg-icons/action/pan-tool';
-import {currentUser} from '../../userProfile'
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 const SingleRoom = ({id, name, teams, join}) => {
@@ -97,6 +96,7 @@ export class RoomsView extends Component {
                                     <TextField onChange={({target:{value}}) => this.setState({newRoomName: value})}
                                                hintText="Type your room name"
                                                fullWidth={true}
+                                               ref={c => c && c.focus()}
                                                style={{margin: '10px'}}/>
                                     <RaisedButton
                                         label="Create room"
@@ -131,22 +131,33 @@ export class RoomsView extends Component {
     }
 }
 export class Rooms extends Component {
+    static defaultProps = {
+        user: undefined,
+    }
     state = {
         rooms: []
     };
+    eventUnsubscriptions = []
 
     componentDidMount() {
         this.fetchRoomsList();
-        subscribeToEvent(
-            roomEvents.room.roomCreatedEvent,
-            (room) => {
-                this.fetchRoomsList()
-            }
+        this.eventUnsubscriptions.push(
+            subscribeToEvent(
+                roomEvents.room.roomCreatedEvent,
+                (room) => { this.fetchRoomsList() }
+            )
+        )
+        this.eventUnsubscriptions.push(
+            subscribeToEvent(
+                roomEvents.room.playerJoinedEvent,
+                (room) => { this.fetchRoomsList() }
+            )
         )
     }
 
     componentWillUnmount() {
-
+        // this.eventUnsubscriptions.forEach(f => f());
+        // this.eventUnsubscriptions = []
     }
 
     fetchRoomsList = () => {
@@ -158,14 +169,23 @@ export class Rooms extends Component {
                 throw new Error(x)
             });
     }
+
     createRoom = (name) => {
         processAction(roomActions.createCreateRoomAction(
-            currentUser.id,
+            this.props.user.id,
             name,
-        ))
+        )).then(({id: roomId}) => {
+            this.props.goToRoom(roomId);
+        })
     }
-    joinRoom = (roomId) => {
 
+    joinRoom = (roomId) => {
+        processAction(roomActions.createJoinRoomAction(
+            this.props.user.id,
+            roomId
+        )).then(({id: roomId}) => {
+            this.props.goToRoom(roomId);
+        })
     }
 
     render() {

@@ -25,8 +25,9 @@ const steps = {
 
 export class Main extends Component {
     state = {
+        user: undefined,
         connected: false,
-        step: "rooms",
+        step: "login",
         roomId: undefined,
     };
 
@@ -41,18 +42,24 @@ export class Main extends Component {
                 throw new Error(x)
             })
     };
-
+    successfulLogIn = (user) => {
+        this.setState({user, step: "rooms"})
+    }
+    goToRoom = (roomId) => {
+        console.log("Go to room %O", roomId)
+        this.setState({step: "room", roomId})
+    }
     render() {
-        const {step, roomId, connected} = this.state;
+        const {step, user, roomId, connected} = this.state;
         return (
             <div {...css({padding: "2em"})}>
                 {connected &&
                 <div {...css({height: "100%", display: "flex"})}>
-                    {step === "rooms" ? <Rooms openRoom={roomId => this.setState({step: "room", roomId})}/> :
-                        step === "room" ? <Room roomId={roomId}/> :
-                            step === "questions" ? <Questions /> :
-                                step === "login" ? <LoginScreen/>
-                                    : undefined}
+                    {step === "login" ? <LoginScreen onSuccessfulLogIn={this.successfulLogIn}/> :
+                     step === "rooms" ? <Rooms user={user} goToRoom={this.goToRoom} /> :
+                     step === "room"  ? <Room roomId={roomId} userId={user.id}/> :
+                     step === "questions" ? <Questions /> :
+                     undefined}
                 </div>
                 }
             </div>

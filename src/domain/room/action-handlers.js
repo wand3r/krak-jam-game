@@ -19,7 +19,7 @@ const createRoomActionHandler = {
             $events: [
                 createRoomCreatedEvent(_newRoom)
             ],
-            $result: { },
+            $result: _newRoom,
             $resultType: resultTypes.success
         }
     }
@@ -36,7 +36,7 @@ const joinRoomActionHandler = {
             $events: [
                 createPlayerJoinedEvent({id: _user.id, name: _user.name})
             ],
-            $result: {},
+            $result: _roomToJoin,
             $resultType: resultTypes.success
         }
     }
@@ -57,6 +57,24 @@ const getRoomsActionHandler = {
         }
     }
 };
+
+const getRoomDetailsActionHandler = {
+    $type: roomActions.getRoomDetailsAction,
+    handle: ({roomId}) => {
+        const room = rooms.find(({id}) => id == roomId)
+        const usersInRoom = 
+            room.players.map(playerId => ({
+                ...users.find(({id}) => playerId === id),
+                teamId: undefined,
+                isReady: false,
+            }))
+        return {
+            $events: [],
+            $result: usersInRoom,
+            $resultType: resultTypes.success,
+        }
+    }
+}
 
 export const room = [
     createRoomActionHandler,

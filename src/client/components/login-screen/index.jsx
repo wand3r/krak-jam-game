@@ -50,9 +50,10 @@ export class LoginScreenView extends Component {
 }
 
 export class LoginScreen extends Component {
-    displayLogin = (userName) => {
-        processAction(createUserLoginAction(userName)).then(() => {
-            alert('logged-in!!');
+    logIn = (userName) => {
+        processAction(createUserLoginAction(userName))
+        .then(user => {
+            this.props.onSuccessfulLogIn(user);
         }).catch((err) => {
             this.setState({validationMessage: err.message});
         });
@@ -67,8 +68,11 @@ export class LoginScreen extends Component {
     render() {
         const {validationMessage} = this.state;
         return (
-            <LoginScreenView canceled={this.repeatLogin} validationMessage={validationMessage}
-                             onLogIn={this.displayLogin}/>
+            <LoginScreenView 
+                canceled={this.repeatLogin} 
+                validationMessage={validationMessage}
+                onLogIn={this.logIn}
+            />
         )
     }
 }

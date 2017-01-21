@@ -31,7 +31,7 @@ const userLoginActionHandler = {
 
         return {
             $events: [],
-            $result: {},
+            $result: _newUser,
             $resultType: resultTypes.success
         };
     }

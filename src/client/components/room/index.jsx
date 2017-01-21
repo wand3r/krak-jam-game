@@ -1,10 +1,13 @@
 import React, { Component } from "react"
-import {currentUser} from '../../userProfile';
 import {css} from "glamor"
 import * as R from 'ramda'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { sortObject } from '../../../utils/sortObject'
+import {processAction} from "../../../lefrex-js/action-processor";
+import {subscribeToEvent} from "../../../lefrex-js/event-aggregator";
+import * as roomActions from "../../../domain/room/actions";
+import * as roomEvents from "../../../domain/room/events";
 
 export const Player = ({name, isCurrent, isReady, hasTeam}) => {
     return (
@@ -144,17 +147,36 @@ export const RoomView = ({
 
 export class Room extends Component {
     state = {
-        roomId: 1,
-        currentUserId: currentUser.id,
         players: [
-          {id: '1', name: "Player 1", teamId: "A", isReady: false},
-          {id: '2', name: "Player 2", teamId: "B", isReady: false},
-          {id: '3', name: "Player 3", teamId: "A", isReady: true },
-          {id: '4', name: "Player 4", teamId: undefined},
-          {id: '5', name: "Player 5", teamId: "A", isReady: false},
-          {id: '6', name: "Player 6", teamId: undefined},
-          {id: '7', name: "Player 7", teamId: "B", isReady: true},
+        //   {id: '1', name: "Player 1", teamId: "A", isReady: false},
+        //   {id: '2', name: "Player 2", teamId: "B", isReady: false},
+        //   {id: '3', name: "Player 3", teamId: "A", isReady: true },
+        //   {id: '4', name: "Player 4", teamId: undefined},
+        //   {id: '5', name: "Player 5", teamId: "A", isReady: false},
+        //   {id: '6', name: "Player 6", teamId: undefined},
+        //   {id: '7', name: "Player 7", teamId: "B", isReady: true},
         ]
+    }
+    eventUnsubscribtions = [];
+    
+    componentDidMount() {
+        this.fetchRoomDetails();
+        this.eventUnsubscribtions.push(
+            subscribeToEvent(
+                roomEvents.createPlayerJoinedEvent,
+                () => this.fetchRoomDetails())
+        );
+    }
+    componentWillUnmount() {
+        // this.eventUnsubscribtions.forEach(f => f());
+        // this.eventUnsubscribtions = [];
+    }
+    fetchRoomDetails = () => {
+        console.log("Room id %O", this.props.roomId)
+        processAction(roomActions.createGetRoomDetailsAction(this.props.roomId))
+        .then(players => {
+            this.setState({players});
+        })
     }
     updateUser = (userId, wholeState, oldUserState) => ({
         ...wholeState,
@@ -172,15 +194,16 @@ export class Room extends Component {
     joinTeam = (userId, roomId, teamId) => {
         this.setState(s => this.updateUser(userId, s, { teamId }))
     }
-    componentDidMount() {
 
-    }
     render() {
-        const { roomId, currentUserId, players } = this.state
+        const { players } = this.state
+        const { roomId, userId } = this.props
+        console.log("User id %O", userId)
+        console.log("Players: %O", players)
         return (
             <RoomView 
                 roomId={roomId} 
-                currentUserId={currentUserId}
+                currentUserId={userId}
                 players={players}
                 leaveRoom={this.leaveRoom} 
                 getReady={this.getReady}
