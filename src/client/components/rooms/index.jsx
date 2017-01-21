@@ -3,6 +3,7 @@ import FlipMove from 'react-flip-move'
 import {css} from 'glamor'
 import {processAction} from "../../../lefrex-js/action-processor";
 import * as roomsActions from "../../../shared/actions/rooms";
+import {ModalContainer, ModalDialog} from 'react-modal-dialog'
 
 const SingleRoom = ({id, name, teams, join}) => {
     return (
@@ -14,7 +15,7 @@ const SingleRoom = ({id, name, teams, join}) => {
                 {name}
             </div>
             <div {...css({flex: 1})}>
-                {teams.red} vs {teams.blue}
+                {teams[0]} vs {teams[1]}
             </div>
             <button {...css({width: 100})} onClick={() => join(id)}>
                 Join
@@ -105,14 +106,12 @@ export class Rooms extends Component {
         rooms: []
     }
     componentDidMount() {
-        setTimeout(() => {
-            processAction(roomsActions.createGetRoomsAction())
-                .then((rooms) => {
-                    console.log(rooms) 
-                    this.setState({rooms})
-                })
-                .catch(x => { throw new Error(x) })
-        }, 3000)
+        processAction(roomsActions.createGetRoomsAction())
+            .then((rooms) => {
+                console.log(rooms) 
+                this.setState({rooms})
+            })
+            .catch(x => { throw new Error(x) })
     }
     componentWillUnmount() {
 
