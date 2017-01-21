@@ -5,20 +5,11 @@ import {processAction} from "../../../lefrex-js/action-processor";
 import rooms from "../../../shared/actions/rooms";
 import {ModalContainer, ModalDialog} from 'react-modal-dialog'
 
-const _rooms = [
-    {id: "1", name: "Room 1", desc: "Cześć", teams: {red: 1, blue: 2}},
-    {id: "2", name: "Room 1", desc: "Cześć", teams: {red: 1, blue: 2}},
-    {id: "3", name: "Room 1", desc: "Cześć", teams: {red: 1, blue: 2}},
-    {id: "4", name: "Room 2", desc: "Nie wchodzić", teams: {red: 4, blue: 2}},
-    {id: "5", name: "Room 3", desc: "Elo, luz jak w hip-hopie", teams: {red: 3, blue: 8}},
-    {id: "6", name: "Room 3", desc: "Elo, luz jak w hip-hopie", teams: {red: 3, blue: 8}},
-];
-
-setTimeout(() => {
-    processAction({$type: rooms.get}).then(result => {
-        console.log(result);
-    });
-}, 5000);
+// setTimeout(() => {
+//     processAction({$type: rooms.get}).then(result => {
+//         console.log(result);
+//     });
+// }, 5000);
 
 const SingleRoom = ({id, name, desc, admin, teams, join}) => {
   return (
@@ -39,18 +30,14 @@ const SingleRoom = ({id, name, desc, admin, teams, join}) => {
   )
 }
 
-export class Rooms extends Component {
-    componentDidMount() {
-
-  }
+export class RoomsView extends Component {
   state = {
-    rooms: _rooms,
     roomNameSearch: "",
     creatingRoom: false,
   }
   render() {
-    const { joinRoom } = this.props
-    const { rooms, roomNameSearch, creatingRoom } = this.state
+    const { rooms, joinRoom, createRoom } = this.props
+    const { roomNameSearch, creatingRoom } = this.state
     const filterdRooms = rooms.filter(({name}) => name.includes(roomNameSearch))
     return (
       <div {...css({
@@ -72,7 +59,7 @@ export class Rooms extends Component {
               width: "50px", height: "100%", 
               fontSize: "1em", padding: "0 1%"
             })}
-            onClick={() => this.setState(s => this.setState({creatingRoom: true}))} 
+            onClick={() => this.setState({creatingRoom: true})} 
           >
             +
           </button>
@@ -80,8 +67,21 @@ export class Rooms extends Component {
             creatingRoom &&
             <ModalContainer onClose={() => this.setState({creatingRoom: false})}>
                 <ModalDialog onClose={() => this.setState({creatingRoom: false})}>
-                    <h1>Dialog Content</h1>
-                    <p>More Content. Anything goes here</p>
+                    <input 
+                        ref={c => c && c.focus()}
+                        placeholder="Room name"
+                        {...css({
+                            fontSize: "1.5em",
+                        })}
+                        onKeyUp={({keyCode, target: {value}}) => {
+                            if(keyCode === 13) { 
+                                createRoom(value)
+                                this.setState({creatingRoom: false})
+                            } else if (keyCode === 27) {
+                                this.setState({creatingRoom: false})
+                            }
+                        }}
+                    />
                 </ModalDialog>
             </ModalContainer>
           }
@@ -104,4 +104,32 @@ export class Rooms extends Component {
       </div>
     )
   }
+}
+
+export class Rooms extends Component {
+    state = {
+        rooms: []
+    }
+    componentDidMount() {
+
+    }
+    componentWillUnmount() {
+
+    }
+    createRoom = (roomName) => {
+
+    }
+    joinRoom = (roomId) => {
+
+    }
+    render() {
+        const { rooms } = this.state
+        return (
+            <RoomsView 
+                rooms={rooms} 
+                createRoom={this.createRoom}
+                joinRoom={this.joinRoom} 
+            />
+        )
+    }
 }
