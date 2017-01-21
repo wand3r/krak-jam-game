@@ -26,7 +26,7 @@ const steps = {
 export class Main extends Component {
     state = {
         connected: false,
-        step: "login",
+        step: "rooms",
         roomId: undefined,
     };
 

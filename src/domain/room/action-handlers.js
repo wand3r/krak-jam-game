@@ -51,7 +51,7 @@ const getRoomsActionHandler = {
                 id: r.id,
                 name: r.name,
                 desc: r.desc,
-                teams: r.teams.map(team => team.reduce((sum, t) => (sum + 1), 0))
+                teams: r.teams.map(team => team.map(userId => users.find(u=>u.id === userId).name))
             })),
             $resultType: resultTypes.success
         }
