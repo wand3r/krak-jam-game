@@ -2,12 +2,13 @@ import React, {Component} from "react"
 import {currentUser} from '../../userProfile';
 import {css} from "glamor"
 import * as R from 'ramda'
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import {RaisedButton, FloatingActionButton} from 'material-ui';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {sortObject} from '../../../utils/sortObject'
 // import { ActionVerifiedUser } from "material-ui/svg-icons/action";
 import ActionVerifiedUser from "material-ui/svg-icons/action/verified-user";
 import AlertWarning from "material-ui/svg-icons/alert/warning";
+import ArrowBack from "material-ui/svg-icons/navigation/arrow-back";
 
 export const Player = ({name, isCurrent, isReady, hasTeam}) => {
     return (
@@ -30,7 +31,7 @@ export const Player = ({name, isCurrent, isReady, hasTeam}) => {
                 alignItems: 'center'
             })}>
                 <span {...css({flex: 1, padding: '6px 12px'})}>{name}</span>
-                {hasTeam ? <span {...css({padding: '6px 12px', background: isReady ? '#f44336' : "#4CAF50"})}>
+                {hasTeam ? <span {...css({padding: '6px 12px', background: isReady ? '#4CAF50' : "#f44336"})}>
                     {isReady ? <ActionVerifiedUser style={{color: '#F5F5F5'}}/>
                          : <AlertWarning style={{color: '#F5F5F5'}}/>}
                 </span> : undefined}
@@ -91,7 +92,7 @@ export const Teams = ({currentUser, teams, joinTeam}) => {
 
 export const WaitingPlayers = ({currentUserId, players}) => {
     return (
-        <div>
+        <div {...css({marginLeft: '4px'})}>
             <h3>Waiting...</h3>
             <div {...css({display: "flex", flexWrap: true})}>
                 {players.map(({id, name, isReady, teamId}) =>
@@ -129,7 +130,15 @@ export const RoomView = ({
         players.filter(({teamId}) => teamId === undefined)
 
     return (
-        <div {...css({display: "flex", fontFamily: 'Roboto', flexDirection: "column"})}>
+        <div {...css({
+            display: "flex",
+            margin: '12px',
+            fontFamily: 'Roboto',
+            maxWidth: '800px',
+            background: '#EEE',
+            padding: '24px',
+            filter: 'drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.5))',
+            flexDirection: "column"})}>
             <Teams
                 currentUser={currentUser}
                 teams={teams}
@@ -139,16 +148,20 @@ export const RoomView = ({
                 currentUserId={currentUser.id}
                 players={waitingPlayers}
             />
-            <div>
-                <button
+            <div {...css({marginLeft: '4px', marginTop: '12px'})}>
+                <RaisedButton
                     disabled={currentUser.teamId == undefined || currentUser.isReady}
                     onClick={() => getReady(currentUser.id, roomId)}
-                >
-                    Ready
-                </button>
-                <button onClick={() => leaveRoom(currentUser.id, roomId)}>
-                    Leave
-                </button>
+                    backgroundColor={'rgb(255, 235, 59)'}
+                    label="Accept"
+                    icon={<ActionVerifiedUser/>}/>
+                <RaisedButton
+                    style={{marginLeft: '8px'}}
+                    disabled={currentUser.teamId == undefined || currentUser.isReady}
+                    onClick={() => leaveRoom(currentUser.id, roomId)}
+                    backgroundColor={'rgb(255, 235, 59)'}
+                    label="Leave"
+                    icon={<ArrowBack/>}/>
             </div>
         </div>
     )

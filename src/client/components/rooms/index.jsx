@@ -58,123 +58,126 @@ export class RoomsView extends Component {
         const {roomNameSearch, creatingRoom} = this.state;
         const filteredRooms = rooms.filter(({name}) => name.includes(roomNameSearch));
         return (
+        <div {...css({
+            display: "flex", flexDirection: "column",
+            backgroundColor: '#EEE',
+            flex: 1,
+            height: "100%",
+        })}>
             <div {...css({
-                display: "flex", flexDirection: "column",
-                backgroundColor: '#EEE',
-                flex: 1,
-                height: "100%",
+                display: "flex", justifyContent: "space-around",
+                height: "40px"
             })}>
-                <div {...css({
-                    display: "flex", justifyContent: "space-around",
-                    height: "40px"
-                })}>
-                    <input
-                        {...css({height: "100%", minWidth: '800px', flex: "1", fontSize: "1.5em", padding: "0 1%"})}
-                        placeholder="Search room name"
-                        onChange={({target: {value}}) => this.setState({roomNameSearch: value}) }
-                    />
-                    <button
-                        {...css({
-                            width: "50px", height: "100%",
-                            fontSize: "1em", padding: "0 1%"
-                        })}
-                        onClick={() => this.setState({creatingRoom: true})}
-                    >
-                        +
-                    </button>
-                    {
-                        creatingRoom &&
-                        <Dialog
-                            title="Create Room"
-                            actions={[]}
-                            modal={true}
-                            open={creatingRoom}
-                            onRequestClose={() => this.setState({creatingRoom: false})}
-                        >
-                            <Card>
-                                <div {...css({width: '100%', display: 'flex', flexDirection: 'column', padding: '18px'})}>
-                                    <TextField onChange={({target:{value}}) => this.setState({newRoomName: value})}
-                                               hintText="Type your room name"
-                                               fullWidth={true}
-                                               style={{margin: '10px'}}/>
-                                    <RaisedButton
-                                        label="Create room"
-                                        onClick={() => {
-                                            createRoom(this.state.newRoomName);
-                                            this.setState({creatingRoom: false});
-                                        }
-                                        }
-                                        primary={true}/>
-                                </div>
-                            </Card>
-                        </Dialog>
-                    }
-                </div>
-                <div {...css({flex: "1"})}>
-                    <FlipMove>
-                        {filteredRooms.map((room, index) => (
-                            <div key={room.id}>
-                                <SingleRoom
-                                    {...room}
-                                    join={joinRoom}
-                                />
-                            </div>
-                        ))}
-                    </FlipMove>
-                </div>
-                <div {...css({display: "flex", justifyContent: "space-around", height: "40px"})}>
-
-                </div>
-            </div>
-        )
-    }
-}
-export class Rooms extends Component {
-    state = {
-        rooms: []
-    };
-
-    componentDidMount() {
-        this.fetchRoomsList();
-        subscribeToEvent(
-            roomEvents.room.roomCreatedEvent,
-            (room) => {
-                this.fetchRoomsList()
+                <input
+                    {...css({height: "100%", minWidth: '800px', flex: "1", fontSize: "1.5em", padding: "0 1%"})}
+                    placeholder="Search room name"
+                    onChange={({target: {value}}) => this.setState({roomNameSearch: value}) }
+                />
+                <RaisedButton
+                    label="Create room"
+                    onClick={() => this.setState({creatingRoom: true})}
+                    icon={<ContentAdd/>}
+                    primary={true}/>
+                +
+            {
+                creatingRoom &&
+                <Dialog
+                    title="Create Room"
+                    actions={[]}
+                    modal={true}
+                    open={creatingRoom}
+                    onRequestClose={() => this.setState({creatingRoom: false})}
+                >
+                    <Card>
+                        <div {...css({width: '100%', display: 'flex', flexDirection: 'column', padding: '18px'})}>
+                            <TextField onChange={({target:{value}}) => this.setState({newRoomName: value})}
+                                       hintText="Type your room name"
+                                       fullWidth={true}
+                                       style={{margin: '10px'}}/>
+                            <RaisedButton
+                                label="Create room"
+                                onClick={() => {
+                                    createRoom(this.state.newRoomName);
+                                    this.setState({creatingRoom: false});
+                                }
+                                }
+                                primary={true}/>
+                        </div>
+                    </Card>
+                </Dialog>
             }
-        )
-    }
-
-    componentWillUnmount() {
-
-    }
-
-    fetchRoomsList = () => {
-        processAction(roomActions.createGetRoomsAction())
-            .then((rooms) => {
-                this.setState({rooms});
-            })
-            .catch(x => {
-                throw new Error(x)
-            });
-    }
-    createRoom = (name) => {
-        processAction(roomActions.createCreateRoomAction(
-            currentUser.id,
-            name,
+        </div>
+        < div
+        {...
+            css({flex: "1"})
+        }
+    >
+    <
+        FlipMove >
+        {filteredRooms.map((room, index) => (
+            <div key={room.id}>
+                <SingleRoom
+                    {...room}
+                    join={joinRoom}
+                />
+            </div>
         ))
     }
-    joinRoom = (roomId) => {
+    </FlipMove>
+    </div>
+        <div {...css({display: "flex", justifyContent: "space-around", height: "40px"})}>
 
+        </div>
+    </div>
+    )
     }
+    }
+    export class Rooms extends Component {
+        state = {
+            rooms: []
+        };
 
-    render() {
-        const {rooms} = this.state
-        return (
-            <RoomsView
-                rooms={rooms}
-                createRoom={this.createRoom}
-                joinRoom={this.joinRoom}
-            />
+        componentDidMount() {
+        this.fetchRoomsList();
+        subscribeToEvent(
+        roomEvents.room.roomCreatedEvent,
+        (room) => {
+        this.fetchRoomsList()
+    }
         )
     }
-}
+
+        componentWillUnmount() {
+
+    }
+
+        fetchRoomsList = () => {
+        processAction(roomActions.createGetRoomsAction())
+        .then((rooms) => {
+        this.setState({rooms});
+    })
+        .catch(x => {
+        throw new Error(x)
+    });
+    }
+        createRoom = (name) => {
+        processAction(roomActions.createCreateRoomAction(
+        currentUser.id,
+        name,
+        ))
+    }
+        joinRoom = (roomId) => {
+
+    }
+
+        render() {
+        const {rooms} = this.state
+        return (
+        <RoomsView
+        rooms={rooms}
+        createRoom={this.createRoom}
+        joinRoom={this.joinRoom}
+        />
+        )
+    }
+    }
