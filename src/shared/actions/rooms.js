@@ -1,3 +1,7 @@
 export const rooms = {
-    get: 'rooms-get'
+    getRoomsAction: 'rooms-get-rooms-action'
 };
+
+export const createGetRoomsAction = () => ({
+    $type: rooms.getRoomsAction
+});

@@ -14,7 +14,7 @@ let _rooms = [
 ];
 
 setTimeout(() => {
-    processAction({$type: rooms.get}).then(result => {
+    processAction({$type: rooms.getRoomsAction}).then(result => {
         console.log(result);
         _rooms = result;
     });
@@ -49,26 +49,48 @@ export class Rooms extends Component {
     }
 
     state = {
-        rooms,
+        rooms: _rooms,
         roomNameSearch: "",
+        creatingRoom: false,
     };
 
     render() {
-        const {joinRoom} = this.props;
-        const {rooms, roomNameSearch} = this.state;
-        const filteredRooms = _rooms.filter(({name}) => name.includes(roomNameSearch));
+        const {joinRoom} = this.props
+        const {rooms, roomNameSearch, creatingRoom} = this.state
+        const filteredRooms = rooms.filter(({name}) => name.includes(roomNameSearch))
         return (
             <div {...css({
                 display: "flex", flexDirection: "column",
                 flex: 1,
                 height: "100%",
             })}>
-                <div {...css({display: "flex", justifyContent: "space-around", height: "40px"})}>
+                <div {...css({
+                    display: "flex", justifyContent: "space-around",
+                    height: "40px"
+                })}>
                     <input
-                        {...css({height: "100%", flex: "0.9", fontSize: "1.5em", padding: "0 1%"})}
-                        placeholder="Room name"
+                        {...css({height: "100%", flex: "1", fontSize: "1.5em", padding: "0 1%"})}
+                        placeholder="Search room name"
                         onChange={({target: {value}}) => this.setState({roomNameSearch: value}) }
                     />
+                    <button
+                        {...css({
+                            width: "50px", height: "100%",
+                            fontSize: "1em", padding: "0 1%"
+                        })}
+                        onClick={() => this.setState(s => this.setState({creatingRoom: true}))}
+                    >
+                        +
+                    </button>
+                    {
+                        creatingRoom &&
+                        <ModalContainer onClose={() => this.setState({creatingRoom: false})}>
+                            <ModalDialog onClose={() => this.setState({creatingRoom: false})}>
+                                <h1>Dialog Content</h1>
+                                <p>More Content. Anything goes here</p>
+                            </ModalDialog>
+                        </ModalContainer>
+                    }
                 </div>
                 <div {...css({flex: "1"})}>
                     <FlipMove>
@@ -83,12 +105,7 @@ export class Rooms extends Component {
                     </FlipMove>
                 </div>
                 <div {...css({display: "flex", justifyContent: "space-around", height: "40px"})}>
-                    <button
-                        {...css({height: "100%", flex: "0.9", fontSize: "1em", padding: "0 1%"})}
-                        {...css({width: 150, height: "100%"})}
-                    >
-                        Create Room
-                    </button>
+
                 </div>
             </div>
         )
