@@ -21,7 +21,6 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 
 const SingleRoom = ({id, name, teams, join}) => {
     const players = [...teams[0], ...teams[1]];
-    console.log(players);
     return (
         <Card style={{backgroundColor: 'transparent'}}>
             <div {...css({display: 'flex', alignItems: 'row', padding: '18px'})}>
@@ -73,67 +72,53 @@ export class RoomsView extends Component {
                         placeholder="Search room name"
                         onChange={({target: {value}}) => this.setState({roomNameSearch: value}) }
                     />
-                    <button
-                        {...css({
-                            width: "50px", height: "100%",
-                            fontSize: "1em", padding: "0 1%"
-                        })}
+                    <RaisedButton
+                        label="Create room"
                         onClick={() => this.setState({creatingRoom: true})}
+                        icon={<ContentAdd/>}
+                        primary={true}/>
+                    {creatingRoom &&
+                    <Dialog
+                        title="Create Room"
+                        actions={[]}
+                        modal={true}
+                        open={creatingRoom}
+                        onRequestClose={() => this.setState({creatingRoom: false})}
                     >
-                        +
-                    </button>
-                    {
-                        creatingRoom &&
-                        <Dialog
-                            title="Create Room"
-                            actions={[]}
-                            modal={true}
-                            open={creatingRoom}
-                            onRequestClose={() => this.setState({creatingRoom: false})}
-                        >
-                            <Card>
-                                <div {...css({width: '100%', display: 'flex', flexDirection: 'column', padding: '18px'})}>
-                                    <TextField onChange={({target:{value}}) => this.setState({newRoomName: value})}
-                                               hintText="Type your room name"
-                                               fullWidth={true}
-                                               ref={c => c && c.focus()}
-                                               style={{margin: '10px'}}/>
-                                    <RaisedButton
-                                        label="Create room"
-                                        onClick={() => {
-                                            createRoom(this.state.newRoomName);
-                                            this.setState({creatingRoom: false});
-                                        }
-                                        }
-                                        primary={true}/>
-                                </div>
-                            </Card>
-                        </Dialog>
-                    }
-                </div>
-                <div {...css({flex: "1"})}>
-                    <FlipMove>
-                        {filteredRooms.map((room, index) => (
-                            <div key={room.id}>
-                                <SingleRoom
-                                    {...room}
-                                    join={joinRoom}
-                                />
+                        <Card>
+                            <div {...css({width: '100%', display: 'flex', flexDirection: 'column', padding: '18px'})}>
+                                <TextField onChange={({target:{value}}) => this.setState({newRoomName: value})}
+                                        hintText="Type your room name"
+                                        fullWidth={true}
+                                        style={{margin: '10px'}}/>
+                                <RaisedButton
+                                    label="Create room"
+                                    onClick={() => {
+                                        createRoom(this.state.newRoomName);
+                                        this.setState({creatingRoom: false});
+                                    }}
+                                    primary={true}/>
                             </div>
-                        ))}
-                    </FlipMove>
+                        </Card>
+                    </Dialog>}
                 </div>
-                <div {...css({display: "flex", justifyContent: "space-around", height: "40px"})}>
-
-                </div>
+            <div {...css({flex: "1"})}>
+                <FlipMove >
+                    {filteredRooms.map((room, index) => (
+                        <div key={room.id}>
+                            <SingleRoom
+                                {...room}
+                                join={joinRoom}
+                            />
+                        </div>
+                    ))}
+                </FlipMove>
             </div>
-        )
-    }
+        </div>
+    )}
 }
+
 export class Rooms extends Component {
-    static defaultProps = {
-        user: undefined,
-    }
     state = {
         rooms: []
     };
@@ -162,12 +147,12 @@ export class Rooms extends Component {
 
     fetchRoomsList = () => {
         processAction(roomActions.createGetRoomsAction())
-            .then((rooms) => {
-                this.setState({rooms});
-            })
-            .catch(x => {
-                throw new Error(x)
-            });
+        .then((rooms) => {
+            this.setState({rooms});
+        })
+        .catch(x => {
+            throw new Error(x)
+        });
     }
 
     createRoom = (name) => {
@@ -195,7 +180,7 @@ export class Rooms extends Component {
                 rooms={rooms}
                 createRoom={this.createRoom}
                 joinRoom={this.joinRoom}
-            />
+                />
         )
     }
 }
