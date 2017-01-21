@@ -4,6 +4,7 @@ import {css} from "glamor"
 import * as R from 'ramda'
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import { sortObject } from '../../../utils/sortObject'
 
 export const Player = ({name, isCurrent, isReady, hasTeam}) => {
     return (
@@ -103,12 +104,13 @@ export const RoomView = ({
     getReady, 
     joinTeam, 
 }) => {
-    
+
     const currentUser = players.find(x => x.id === currentUserId)
 
     const teams = R.pipe(
         R.filter(({teamId}) => teamId !== undefined),
         R.groupBy(x => x.teamId),
+        sortObject
     )(players)
 
     const waitingPlayers = 
@@ -145,7 +147,7 @@ export class Room extends Component {
         roomId: 1,
         currentUserId: currentUser.id,
         players: [
-          {id: '1', name: "Player 1", teamId: undefined, isReady: false},
+          {id: '1', name: "Player 1", teamId: "A", isReady: false},
           {id: '2', name: "Player 2", teamId: "B", isReady: false},
           {id: '3', name: "Player 3", teamId: "A", isReady: true },
           {id: '4', name: "Player 4", teamId: undefined},
